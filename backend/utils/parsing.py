@@ -114,27 +114,85 @@ def _last_assistant_message(history: Iterable) -> str:
     return messages[-1] if messages else ""
 
 
+def _format_budget_value(amount: str, currency_hint: str) -> str:
+    if currency_hint == "usd":
+        return f"${amount}"
+    return f"INR {amount}"
+
+
+def _message_mentions_budget_context(lowered: str) -> bool:
+    budget_like_terms = [
+        "budget",
+        "buget",
+        "bugdet",
+        "bugde",
+        "bugdeg",
+        "budge",
+        "price",
+        "range",
+        "cost",
+        "according to",
+        "under",
+        "around",
+        "about",
+    ]
+    return any(term in lowered for term in budget_like_terms)
+
+
 def extract_budget_from_text(message: str, history: Iterable | None = None, pending_slot: str | None = None) -> str | None:
     lowered = message.lower().strip()
     last_assistant = _last_assistant_message(history or []).lower()
+    currency_hint = "usd" if ("usd" in lowered or "$" in lowered) else "inr"
 
     if lowered in BUDGET_FLEX_TERMS and (pending_slot == "budget" or "budget" in last_assistant or "work within" in last_assistant):
         return "Flexible"
 
-    currency_match = re.search(r"\b(?:under|around|about|budget|below|max)\s*(?:inr|rs\.?|usd|\$)?\s*(\d{2,6})\b", lowered)
-    if currency_match:
-        amount = currency_match.group(1)
-        if "usd" in lowered or "$" in lowered:
+    range_match = re.search(
+        r"\b(?:between\s*)?(\d{2,6})\s*(?:to|and|-)\s*(\d{2,6})(?:\s*(?:inr|rs\.?|usd|dollars?|\$))?\b",
+        lowered,
+    )
+    if range_match:
+        low, high = range_match.group(1), range_match.group(2)
+        if int(low) > int(high):
+            low, high = high, low
+        return f"{_format_budget_value(low, currency_hint)} to {_format_budget_value(high, currency_hint)}"
+
+    keyword_amount_match = re.search(
+        r"(?:budget|buget|bugdet|bugde|bugdeg|budge|price|range|cost)[^\d]{0,12}(\d{2,6})",
+        lowered,
+    )
+    if keyword_amount_match:
+        amount = keyword_amount_match.group(1)
+        if currency_hint == "usd":
             return f"Under ${amount}"
-        if "inr" in lowered or "rs" in lowered:
-            return f"Under INR {amount}"
-        return f"Around {amount}"
+        return f"Under INR {amount}"
+
+    upto_match = re.search(r"\b(?:up to|upto|max(?:imum)?|under|below)\s*(?:inr|rs\.?|usd|\$)?\s*(\d{2,6})\b", lowered)
+    if upto_match:
+        amount = upto_match.group(1)
+        if currency_hint == "usd":
+            return f"Under ${amount}"
+        return f"Under INR {amount}"
+
+    around_match = re.search(r"\b(?:around|about|budget)\s*(?:inr|rs\.?|usd|\$)?\s*(\d{2,6})\b", lowered)
+    if around_match:
+        amount = around_match.group(1)
+        if currency_hint == "usd":
+            return f"Around ${amount}"
+        return f"Around INR {amount}"
+
+    standalone_amounts = re.findall(r"\b\d{2,6}\b", lowered)
+    if len(standalone_amounts) == 1 and _message_mentions_budget_context(lowered):
+        amount = standalone_amounts[0]
+        if currency_hint == "usd":
+            return f"Under ${amount}"
+        return f"Under INR {amount}"
 
     money_only_match = re.fullmatch(r"(?:rs\.?\s*)?(\d{2,6})(?:\s*(?:inr|usd|dollars?))?", lowered)
     if money_only_match:
         amount = money_only_match.group(1)
         if pending_slot == "budget" or "budget" in last_assistant or "work within" in last_assistant or "optimize" in last_assistant:
-            if "usd" in lowered or "$" in lowered:
+            if currency_hint == "usd":
                 return f"Under ${amount}"
             return f"Under INR {amount}"
 
@@ -167,7 +225,7 @@ def should_merge_history(request: ChatRequest, pending_slot: str | None = None) 
         return False
     if is_greeting(message) or is_thanks(message):
         return False
-    if extract_budget_from_text(message, request.history, pending_slot=pending_slot) and len(message.split()) <= 5:
+    if extract_budget_from_text(message, request.history, pending_slot=pending_slot) and len(message.split()) <= 7:
         return True
     if looks_like_style_request(message):
         return False
