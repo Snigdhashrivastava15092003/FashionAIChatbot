@@ -1,0 +1,400 @@
+:root {
+  --bg: #f4efe8;
+  --panel: rgba(255, 251, 246, 0.96);
+  --panel-strong: #fffdf9;
+  --border: rgba(71, 52, 35, 0.12);
+  --text: #211810;
+  --muted: #6e6154;
+  --accent: #9c5338;
+  --accent-soft: #ead6ca;
+  --shadow: 0 24px 70px rgba(60, 39, 19, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(194, 150, 119, 0.18), transparent 32%),
+    linear-gradient(180deg, #f8f3ed 0%, #efe5d9 100%);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.chat-app {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 28px 18px 42px;
+}
+
+.chat-shell {
+  width: min(920px, 100%);
+  display: grid;
+  gap: 18px;
+}
+
+.chat-header,
+.chat-card,
+.recommendation-card {
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+}
+
+.eyebrow,
+.meta-label {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.chat-header h1,
+.recommendation-head h2 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.chat-header h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1;
+}
+
+.intro,
+.summary-text,
+.composer-hint {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.status-row,
+.quick-bar,
+.slot-strip,
+.hint-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.status-row {
+  margin-top: 20px;
+}
+
+.status-pill,
+.source-pill,
+.chip,
+.secondary-button,
+.slot-strip span,
+.hint-list span {
+  border-radius: 999px;
+}
+
+.status-pill,
+.source-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 16px;
+  background: #201711;
+  color: #fff8f3;
+  font-size: 0.86rem;
+}
+
+.status-pill.muted,
+.source-pill {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.quick-bar {
+  justify-content: center;
+}
+
+.chip,
+.secondary-button {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: 180ms ease;
+}
+
+.chip:hover,
+.secondary-button:hover,
+.primary-button:hover {
+  transform: translateY(-1px);
+}
+
+.chip:hover,
+.secondary-button:hover {
+  background: #f3e2d7;
+}
+
+.slot-strip span,
+.hint-list span {
+  padding: 8px 12px;
+  background: rgba(156, 83, 56, 0.08);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.chat-history {
+  min-height: 420px;
+  max-height: 520px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 4px;
+}
+
+.message-row {
+  display: flex;
+}
+
+.message-row.user {
+  justify-content: flex-end;
+}
+
+.message-wrap {
+  max-width: 84%;
+}
+
+.message-bubble {
+  border-radius: 22px;
+  padding: 14px 16px;
+  line-height: 1.65;
+  font-size: 0.98rem;
+}
+
+.message-row.user .message-bubble {
+  background: #201711;
+  color: #fff8f3;
+  border-bottom-right-radius: 8px;
+}
+
+.message-row.assistant .message-bubble {
+  background: var(--panel-strong);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 8px;
+}
+
+.message-meta {
+  margin-top: 6px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.message-row.user .message-meta {
+  text-align: right;
+}
+
+.typing,
+.error,
+.warning {
+  margin-top: 14px;
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+
+.typing {
+  background: rgba(156, 83, 56, 0.08);
+  color: var(--muted);
+}
+
+.warning {
+  background: rgba(199, 151, 78, 0.14);
+  color: #7a5a1f;
+}
+
+.error {
+  background: rgba(158, 53, 56, 0.12);
+  color: #8d2f33;
+}
+
+.hidden {
+  display: none;
+}
+
+.composer {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+textarea,
+input {
+  width: 100%;
+  border: 1px solid rgba(71, 52, 35, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  border-radius: 18px;
+  padding: 14px 16px;
+  outline: none;
+}
+
+textarea:focus,
+input:focus {
+  border-color: rgba(156, 83, 56, 0.45);
+  box-shadow: 0 0 0 4px rgba(156, 83, 56, 0.08);
+}
+
+.composer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.composer-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.primary-button {
+  border: none;
+  background: linear-gradient(135deg, #201711, #8a4730);
+  color: #fff8f3;
+  padding: 12px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.recommendation-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.meta-grid,
+.detail-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.meta-grid,
+.detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.meta-grid p {
+  margin: 6px 0 0;
+  line-height: 1.55;
+}
+
+.detail-card {
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.detail-card.wide {
+  grid-column: span 2;
+}
+
+.detail-card h3,
+.match-section h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.detail-card ul,
+.match-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.detail-card li {
+  margin-bottom: 8px;
+  color: var(--muted);
+}
+
+.palette-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.palette-list span {
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(156, 83, 56, 0.1);
+  font-size: 0.88rem;
+}
+
+.match-section {
+  margin-top: 18px;
+}
+
+.match-list {
+  display: grid;
+  gap: 12px;
+  padding-left: 0;
+}
+
+.match-item {
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #fffdf8;
+  padding: 16px;
+}
+
+.match-item strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.match-item p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+  .chat-app {
+    padding: 18px 12px 28px;
+  }
+
+  .chat-header,
+  .chat-card,
+  .recommendation-card {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .composer-actions,
+  .composer-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .meta-grid,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-card.wide {
+    grid-column: span 1;
+  }
+}

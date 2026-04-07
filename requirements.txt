@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-dotenv
+pydantic
+pandas
+numpy
+scikit-learn
+joblib
+google-genai
+langchain-core
+faiss-cpu; platform_system != "Windows"

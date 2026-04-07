@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fashion AI | Stylist Chat</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="chat-app">
+    <section class="chat-shell">
+      <header class="chat-header">
+        <div>
+          <p class="eyebrow">Fashion AI</p>
+          <h1>Chat with your stylist</h1>
+          <p class="intro">Describe your occasion, budget, and style mood naturally. Fashion AI will ask only what it still needs.</p>
+        </div>
+        <div class="status-row">
+          <span id="healthBadge" class="status-pill">Checking system</span>
+          <span id="modelBadge" class="status-pill muted">Loading retrieval</span>
+          <span id="sessionBadge" class="status-pill muted">Session loading</span>
+        </div>
+      </header>
+
+      <section class="quick-bar">
+        <button class="chip" data-prompt="I need an outfit for a wedding under 3000 INR">Wedding under 3000 INR</button>
+        <button class="chip" data-prompt="I have my birthday party what should I wear">Birthday Party</button>
+        <button class="chip" data-prompt="Suggest something elegant for a first date">First Date</button>
+        <button class="chip" data-prompt="I need business casual for office meetings">Business Casual</button>
+      </section>
+
+      <section class="slot-strip" id="slotStrip"></section>
+      <section class="hint-list" id="preferenceHints"></section>
+
+      <section class="chat-card">
+        <div id="chatHistory" class="chat-history"></div>
+        <div id="typingIndicator" class="typing hidden">Fashion AI is preparing your look...</div>
+        <div id="warningBox" class="warning hidden"></div>
+        <div id="errorBox" class="error hidden"></div>
+
+        <form id="chatForm" class="composer">
+          <textarea id="messageInput" rows="3" placeholder="For example: I have a birthday party and my budget is around 3000."></textarea>
+          <div class="composer-actions">
+            <p class="composer-hint">You can also reply with short follow-ups like “3000”, “make it more classy”, or “show a cheaper option”.</p>
+            <div class="composer-buttons">
+              <button id="clearButton" class="secondary-button" type="button">New chat</button>
+              <button type="submit" class="primary-button">Send</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="recommendation-card">
+        <div class="recommendation-head">
+          <div>
+            <p class="eyebrow">Recommendation</p>
+            <h2 id="recommendationTitle">Waiting for your brief</h2>
+          </div>
+          <span id="sourceBadge" class="source-pill">preview</span>
+        </div>
+
+        <p id="recommendationSummary" class="summary-text">Share your occasion and budget to receive a polished outfit recommendation.</p>
+
+        <div class="meta-grid">
+          <div>
+            <span class="meta-label">Occasion match</span>
+            <p id="occasionMatch">-</p>
+          </div>
+          <div>
+            <span class="meta-label">Personality match</span>
+            <p id="personalityMatch">-</p>
+          </div>
+          <div>
+            <span class="meta-label">Budget fit</span>
+            <p id="budgetFit">-</p>
+          </div>
+          <div>
+            <span class="meta-label">Confidence</span>
+            <p id="confidenceSummary">-</p>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <article class="detail-card">
+            <h3>Main outfit items</h3>
+            <ul id="mainItemsList"></ul>
+          </article>
+          <article class="detail-card">
+            <h3>Layering</h3>
+            <ul id="layeringList"></ul>
+          </article>
+          <article class="detail-card">
+            <h3>Footwear</h3>
+            <ul id="footwearList"></ul>
+          </article>
+          <article class="detail-card">
+            <h3>Accessories</h3>
+            <ul id="accessoriesList"></ul>
+          </article>
+          <article class="detail-card wide">
+            <h3>Color palette</h3>
+            <div id="paletteList" class="palette-list"></div>
+          </article>
+          <article class="detail-card wide">
+            <h3>Styling tips</h3>
+            <ul id="stylingTipsList"></ul>
+          </article>
+          <article class="detail-card wide">
+            <h3>Alternatives</h3>
+            <ul id="alternativesList"></ul>
+          </article>
+        </div>
+
+        <section class="match-section">
+          <h3>Dataset grounding</h3>
+          <div id="retrievedMatches" class="match-list"></div>
+        </section>
+      </section>
+
+      <input id="personalityInput" type="hidden" />
+      <input id="budgetInput" type="hidden" />
+      <input id="occasionInput" type="hidden" />
+      <input id="placeInput" type="hidden" />
+      <input id="weatherInput" type="hidden" />
+      <input id="colorInput" type="hidden" />
+      <input id="styleInput" type="hidden" />
+      <input id="issueInput" type="hidden" />
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
